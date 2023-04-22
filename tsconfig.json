@@ -18,5 +18,5 @@
     "jsxFactory": "JSX.createElement",
     "jsxFragmentFactory": "JSX.Fragment"
   },
-  "include": ["./src"]
+  "include": ["./src", "./src/assets"]
 }

@@ -1,4 +1,6 @@
-import { Application, JSX, ParameterType } from "typedoc";
+import path from "path";
+import fs from "fs-extra";
+import { Application, JSX,  ParameterType, RendererEvent } from "typedoc";
 
 export function load(app: Application): void {
   app.options.addDeclaration({
@@ -7,17 +9,23 @@ export function load(app: Application): void {
     help: "Google Tag Manager Workspace ID",
   });
 
-  app.renderer.hooks.on("head.end", (ctx) => {
-    const tagId = ctx.options.getValue("gtmWorkspaceId");
+  app.renderer.hooks.on("body.begin", (ctx) => {
+   const tagId = ctx.options.getValue("gtmWorkspaceId");
 
-    // @ts-ignore
-    return <script dangerouslySetInnerHTML={{__html: `<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','${tagId}');</script>
-<!-- End Google Tag Manager -->`}}></script>
+   // @ts-ignore
+   return <script id="gtm" tagId={tagId} src={ctx.relativeURL('assets/gtm.js')}></script>
+}); 
+
+  app.renderer.on(RendererEvent.END, (ctx) => {
+	const defaultRootPath = path.join(process.cwd(), 'docs');
+	const rootPath = app.options.getValue('out') || defaultRootPath;
+
+    const sourceAsset = path.join(__dirname, './assets/gtm.js');
+	fs.ensureDirSync(path.join(rootPath, 'assets'));
+	fs.copyFileSync(
+		sourceAsset,
+		path.join(rootPath, 'assets/gtm.js')
+	);
   });
 
   app.renderer.hooks.on("body.end", (ctx) => {
