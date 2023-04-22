@@ -10,15 +10,14 @@ export function load(app: Application): void {
   app.renderer.hooks.on("head.end", (ctx) => {
     const tagId = ctx.options.getValue("gtmWorkspaceId");
 
-    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
     // @ts-ignore
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    // @ts-ignore
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer',tagId);
-
-    return <></>;
+    return <script dangerouslySetInnerHTML={{__html: `<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','${tagId}');</script>
+<!-- End Google Tag Manager -->`}}></script>
   });
 
   app.renderer.hooks.on("body.end", (ctx) => {

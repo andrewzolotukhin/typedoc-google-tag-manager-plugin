@@ -35,7 +35,7 @@
   "module": "dist/index.mjs",
   "name": "typedoc-google-tag-manager-plugin",
   "peerDependencies": {
-    "typedoc": "^0.24.4"
+    "typedoc": "^0.23.26"
   },
   "publishConfig": {
     "access": "public"
@@ -50,5 +50,5 @@
     "typecheck": "tsc -p tsconfig.eslint.json"
   },
   "types": "dist/index.d.ts",
-  "version": "1.0.0"
+  "version": "1.0.2"
 }
